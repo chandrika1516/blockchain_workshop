@@ -1,120 +1,187 @@
-# 🧾 MultiWill - Digital Inheritance on Blockchain
+<!-- README.md -->
+# 🧾 MultiWill – Digital Inheritance on Flare (Coston2)
 
-<div align="center">
+## 1. Project Title
 
-![Solidity](https://img.shields.io/badge/Solidity-0.8.0+-blue.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
-![Platform](https://img.shields.io/badge/Platform-Ethereum%20Compatible-purple.svg)
+**MultiWill – On-Chain Digital Inheritance Manager**
 
-</div>
-
-## 📖 Project Description
-MultiWill is a decentralized smart contract that enables users to create digital wills on the blockchain. This innovative solution allows you to securely designate crypto assets to specific recipients, ensuring your digital assets are distributed according to your wishes without relying on traditional intermediaries.
+A smart contract–driven system that lets users create and manage multiple on-chain wills, assigning FLR (or compatible native tokens) to chosen recipients in a transparent and trust-minimized way.
 
 ---
 
-## 🎯 What It Does
-MultiWill leverages blockchain technology to provide a transparent, immutable, and automated inheritance system for cryptocurrency assets. Users can:
+## 2. Contract Address
 
-- Create multiple wills for different recipients  
-- Specify exact amounts to be inherited  
-- Allow recipients to claim their inheritance  
-- Track the status of all wills in real-time  
+The MultiWill contract is deployed on the **Flare Coston2 testnet**:
 
----
+- **Contract Address:** `0xF302134fbC6525bD0be4cA2aA040f3A5F9ff8492`  
+- **Block Explorer:** https://coston2-explorer.flare.network/address/0xF302134fbC6525bD0be4cA2aA040f3A5F9ff8492
 
-## ✨ Features
-- 🔒 **Secure Storage** – Wills are stored immutably on the blockchain  
-- 📊 **Multiple Wills** – Create unlimited wills for different recipients  
-- 💰 **Flexible Amounts** – Assign any crypto amount per recipient  
-- 🔄 **Claim Management** – Recipients can easily claim funds  
-- 📈 **Transparency** – All transactions are publicly verifiable  
-- 🛡️ **No Intermediaries** – No third-party executors required  
-- 📱 **Easy Access** – Simple contract functions  
+You can view the contract, its transactions, and interact with it directly through the explorer.
 
 ---
 
-## 🚀 How It Works
-1. **Create a Will** – Call `createWill()` with recipient address and send crypto.  
-2. **Will Storage** – Contract stores recipient, amount, and claim status.  
-3. **Claiming** – Recipients use `claimWill()` to withdraw funds.  
-4. **Tracking** – View status using read-only functions.
+## 3. Description
+
+MultiWill is a **decentralized digital inheritance system** built as a smart contract. It allows users to lock funds into “wills” that specify:
+
+- A **recipient address**
+- A **specific amount** of native tokens (e.g., FLR)
+- A **claim status** (claimed / not claimed)
+
+Each wallet can maintain **multiple wills**, enabling granular distribution of assets to different recipients.
+
+Because MultiWill is deployed on-chain, it:
+
+- Operates without centralized services, lawyers, or custodians.
+- Relies on smart contract logic to enforce who can claim what.
+- Stores all state on the blockchain for transparency and auditability.
+
+The frontend integration (via `wagmi` + `viem`) provides a simple UI where users can:
+
+- Connect their wallet.
+- Create new wills by specifying a recipient and sending FLR.
+- Trigger claims as a recipient.
+- View contract balance and their personal will count.
 
 ---
 
-## 🛠 Smart Contract Functions
+## 4. Features
 
-### `createWill(address _recipient) public payable`
-Creates a new will with the specified recipient and sent ETH amount.
+### 🔐 Trust-Minimized Digital Wills
+- Users create wills directly on-chain.
+- No need for traditional intermediaries (lawyers, custodians, centralized services).
+- Contract logic strictly enforces ownership and recipient permissions.
 
-### `claimWill(address _owner, uint256 _index) public`
-Allows the recipient to claim funds from a specific will.
+### 🧾 Multiple Wills per Owner
+- Each address can create **multiple separate wills**.
+- Helpful for distributing funds among:
+  - Family members
+  - Friends
+  - Organizations or charities
 
-### `getMyWillsCount() public view returns (uint256)`
-Returns the number of wills created by the caller.
+### 💰 Native Token Support
+- Wills are funded in the network’s **native currency** (e.g., FLR on Flare Coston2).
+- Amounts are stored per will and released only to the intended recipient.
 
-### `getWill(address _owner, uint256 _index) public view`
-Returns recipient address, amount, and claim status.
+### ✅ Recipient-Only Claiming
+- Only the address designated as `recipient` in a will can successfully call `claimWill`.
+- Once a will is claimed, it is marked as `claimed` to prevent double-claims.
 
-### `getContractBalance() public view returns (uint256)`
-Returns total balance held by the smart contract.
+### 📊 On-Chain Transparency
+- Anyone can:
+  - View the overall contract balance.
+  - Query the number of wills created by an address.
+  - Fetch details of individual wills (recipient, amount, claimed status).
+- Ensures full visibility over the system’s state.
+
+### 🧱 Simple, Composable API
+Core functions exposed by the contract include:
+
+- `createWill(address _recipient)` – create and fund a new will (payable).
+- `claimWill(address _owner, uint256 _index)` – claim a specific will as the authorized recipient.
+- `getMyWillsCount()` – count of wills created by the caller.
+- `getWill(address _owner, uint256 _index)` – read details of a specific will.
+- `getContractBalance()` – total balance locked in the contract.
+
+These methods are easy to integrate into any dApp or backend using `viem` or `ethers`.
+
+### 🧩 Frontend Integration (Sample UI)
+The sample React/Next.js UI (`components/sample.tsx`) demonstrates:
+
+- Wallet connection using `wagmi`.
+- Reading contract state (balance, will count).
+- Creating new wills with recipient validation.
+- Triggering claims with error handling and transaction status feedback.
 
 ---
 
-## 🔗 Deployed Smart Contract Link
-You can interact with the deployed contract here:  
-https://coston2-explorer.flare.network//tx/0x3637501607a1aa5d27ad9f270f25d0e609f6c320dae60afeac59ca37f0b527ec
+## 5. How It Solves the Problem
+
+### The Problem
+
+Traditional inheritance and asset transfer systems suffer from several issues:
+
+1. **Centralization & Trust Requirements**
+   - Require lawyers, custodians, or centralized platforms.
+   - Introduce counterparty risk and potential single points of failure.
+
+2. **Lack of Transparency**
+   - Beneficiaries may not know the status, value, or details of what they are supposed to receive.
+   - Processes are often slow, opaque, and jurisdiction-dependent.
+
+3. **Poor Fit for Digital Assets**
+   - Crypto and digital tokens are held in wallets, not bank accounts.
+   - Traditional legal processes don’t integrate natively with blockchain assets.
+
+4. **Complex Coordination**
+   - Writing and executing a will across multiple beneficiaries can be complicated and costly.
+   - Cross-border inheritance can be especially difficult.
 
 ---
 
-## 📜 Smart Contract Code
-// // SPDX-License-Identifier: MIT
-// pragma solidity ^0.8.0;
+### The MultiWill Solution
 
-// contract MultiWill {
-//     struct Will {
-//         address recipient;
-//         uint256 amount;
-//         bool claimed;
-//     }
+MultiWill addresses these pain points using **smart contract automation** and **on-chain data**.
 
-//     mapping(address => Will[]) public wills; // Each owner can have multiple wills
+#### 1. Direct, On-Chain Allocation
+Owners can create wills directly from their wallet:
 
-//     function createWill(address _recipient) public payable {
-//         require(_recipient != address(0), "Invalid recipient address");
-//         require(msg.value > 0, "Amount must be greater than zero");
+- They specify a **recipient address**.
+- They send FLR as the **inheritance amount**.
+- The will is stored in a public, auditable contract state.
 
-//         wills[msg.sender].push(Will({
-//             recipient: _recipient,
-//             amount: msg.value,
-//             claimed: false
-//         }));
-//     }
+This removes the need for intermediaries in the allocation step.
 
-//     function claimWill(address _owner, uint256 _index) public {
-//         require(_index < wills[_owner].length, "Invalid will index");
+#### 2. Clear, Programmable Rules
+The logic for inheritance is fully encoded in the contract:
 
-//         Will storage userWill = wills[_owner][_index];
-//         require(msg.sender == userWill.recipient, "Only recipient can claim");
-//         require(!userWill.claimed, "Already claimed");
-//         require(userWill.amount > 0, "No funds to claim");
+- Only the **designated recipient** can claim funds.
+- Once claimed, the will is marked as claimed and cannot be reused.
+- Every interaction is recorded on the blockchain.
 
-//         userWill.claimed = true;
-//         payable(userWill.recipient).transfer(userWill.amount);
-//     }
+This delivers predictable behavior that doesn’t depend on human discretion.
 
-//     function getMyWillsCount() public view returns (uint256) {
-//         return wills[msg.sender].length;
-//     }
+#### 3. Full Transparency & Verifiability
+Because everything is on-chain:
 
-//     function getWill(address _owner, uint256 _index) public view returns (address recipient, uint256 amount, bool claimed) {
-//         require(_index < wills[_owner].length, "Invalid will index");
-//         Will memory userWill = wills[_owner][_index];
-//         return (userWill.recipient, userWill.amount, userWill.claimed);
-//     }
+- Beneficiaries can verify:
+  - That a will exists.
+  - The amount assigned to them.
+  - Whether it has been claimed.
+- Third parties (auditors, apps, dashboards) can integrate and analyze state.
 
-//     function getContractBalance() public view returns (uint256) {
-//         return address(this).balance;
-//     }
-// }
+This transparency builds trust without exposing private keys or seed phrases.
 
+#### 4. Easy Integration for dApps
+The simple ABI and clean function design make MultiWill:
+
+- Easy to use in **other DeFi / Web3 applications**.
+- Suitable as a building block for:
+  - Inheritance dashboards.
+  - Legacy planning tools.
+  - DAO or community-grant mechanisms (e.g., scheduled or conditional grants).
+
+#### 5. Educational & Developer-Friendly
+Deployed on **Flare Coston2 testnet**, this project also serves as:
+
+- A learning resource for:
+  - Writing multi-recipient, stateful smart contracts.
+  - Integrating contracts with a modern frontend stack (`Next.js`, `wagmi`, `viem`).
+- A template for developers who want to:
+  - Build advanced inheritance logic (time locks, oracles, social recovery).
+  - Extend the contract to more complex estate planning logic.
+
+---
+
+## Summary of Benefits
+
+- **For Users:**  
+  A straightforward way to allocate crypto assets to multiple recipients, enforced entirely by code.
+
+- **For Developers:**  
+  A clean, well-structured smart contract and React integration demonstrating multi-will management, ready to extend and adapt.
+
+- **For the Ecosystem:**  
+  A step toward practical, user-friendly digital inheritance on blockchain networks like Flare.
+
+---
