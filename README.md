@@ -17,6 +17,8 @@ The MultiWill contract is deployed on the **Flare Coston2 testnet**:
 - **Block Explorer:** https://coston2-explorer.flare.network/address/0xF302134fbC6525bD0be4cA2aA040f3A5F9ff8492
 
 You can view the contract, its transactions, and interact with it directly through the explorer.
+<img width="1846" height="914" alt="image" src="https://github.com/user-attachments/assets/8dab423b-7017-4d44-8ea1-b99119127647" />
+
 
 ---
 
